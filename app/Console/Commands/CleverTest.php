@@ -45,10 +45,9 @@ class CleverTest extends Command
      */
     public function handle()
     {
-
-
         $allSubscribers = LocationSubscriber::all();
-
+        $this->cleverService->getAvailability();
+        
         foreach ($allSubscribers as $subscriber) {
             $available = $this->cleverService->getAvailableSlotsById($subscriber->location->clever_id, $subscriber->type);
             dump("There are currently $available spots left at " . $subscriber->location->name);

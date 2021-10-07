@@ -13,28 +13,31 @@ class CleverService
     const FUNCTIONAL = 'functional';
     CONST TOTAL = 'total';
 
+    private $availabilityResponse;
 
+    private $locationResponse;
 
     public function getLocations() : Object
     {
-        return Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/locations.json")->object();
+        $this->locationResponse =  Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/locations.json")->object();
+        return $this->locationResponse;
     }
 
     public function getAvailability() : array
     {
-        return Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/availability.json")->json();
+        $this->availabilityResponse =  Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/availability.json")->json();
+        return $this->availabilityResponse;
     }
 
     public function getChargePointById($id)
     {
-       $availabilityResponse = $this->getAvailability();
-
-       return $availabilityResponse[$id];
+       return $this->availabilityResponse[$id];
     }
 
     public function getAvailableSlotsById($id, $type)
     {
         $chargePoint = $this->getChargePointById($id);
+    
         $availableSlots =  0;
 
         foreach($chargePoint[self::AVAILABLE][$type] as $amount) {
