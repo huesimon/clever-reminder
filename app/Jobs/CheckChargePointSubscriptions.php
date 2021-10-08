@@ -39,7 +39,6 @@ class CheckChargePointSubscriptions implements ShouldQueue
         foreach ($allSubscribers as $subscriber) {
             $available = $cleverService->getAvailableSlotsById($subscriber->location->clever_id, $subscriber->type);
             $subscriber->user->notify(new ChargePointSpotsAvailable($available, $subscriber->location->name));
-            //Send this message via Telegram
         }
     }
 }

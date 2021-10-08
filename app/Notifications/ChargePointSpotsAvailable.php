@@ -3,11 +3,12 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
-use Mockery\Generator\StringManipulation\Pass\AvoidMethodClashPass;
+use NotificationChannels\Telegram\TelegramMessage;
 use Symfony\Component\Translation\PseudoLocalizationTranslator;
+use Mockery\Generator\StringManipulation\Pass\AvoidMethodClashPass;
 
 class ChargePointSpotsAvailable extends Notification
 {
@@ -34,7 +35,7 @@ class ChargePointSpotsAvailable extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'telegram'];
     }
 
     /**
@@ -49,6 +50,15 @@ class ChargePointSpotsAvailable extends Notification
                     ->line("There are currently $this->availableSpots at $this->locationName")
                     ->action('Notification Action', url('/'))
                     ->line('Thank you for using our application!');
+    }
+
+    public function toTelegram($notifiable)
+    {
+           return TelegramMessage::create()
+            // Optional recipient user id.
+            ->to($notifiable->telegram_user_id)
+            // Markdown supported.
+            ->content("Free: $this->availableSpots at $this->locationName");
     }
 
     /**
