@@ -62,6 +62,4 @@ class CleverService
 
         return $total - $totalAvailable;
     }
-
-
 }

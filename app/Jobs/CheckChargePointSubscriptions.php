@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\LocationSubscriber;
+use App\Notifications\ChargePointSpotsAvailable;
+use App\Services\CleverService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -29,10 +31,15 @@ class CheckChargePointSubscriptions implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(CleverService $cleverService)
     {
-        $subscriptions = LocationSubscriber::all();
-
+        $allSubscribers = LocationSubscriber::all();
+        $cleverService->getAvailability();
         
+        foreach ($allSubscribers as $subscriber) {
+            $available = $cleverService->getAvailableSlotsById($subscriber->location->clever_id, $subscriber->type);
+            $subscriber->user->notify(new ChargePointSpotsAvailable($available, $subscriber->location->name));
+            //Send this message via Telegram
+        }
     }
 }

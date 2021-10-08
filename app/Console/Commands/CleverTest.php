@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\CheckChargePointSubscriptions;
 use App\Models\Location;
 use App\Models\LocationSubscriber;
 use App\Models\User;
@@ -45,6 +46,10 @@ class CleverTest extends Command
      */
     public function handle()
     {
+        CheckChargePointSubscriptions::dispatch();
+
+
+        dd();
         $allSubscribers = LocationSubscriber::all();
         $this->cleverService->getAvailability();
         
