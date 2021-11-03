@@ -10,10 +10,15 @@ class Location extends Model
     use HasFactory;
 
     protected $guarded = [];
-    
+
 
     public function subscribers()
     {
         return $this->hasMany(LocationSubscriber::class);
+    }
+
+    public function chargePoints()
+    {
+        return $this->hasMany(ChargePoint::class);
     }
 }
