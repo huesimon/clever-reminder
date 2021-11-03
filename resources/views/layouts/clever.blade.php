@@ -14,11 +14,14 @@
         <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
         <!-- Scripts -->
-        <script src="{{ mix('js/app.js') }}" defer></script>
+        <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.css" rel="stylesheet">
+        @livewireStyles
+        {{-- <script src="{{ mix('js/app.js') }}" defer></script> --}}
     </head>
     <body>
-        <div class="font-sans text-gray-900 antialiased">
+        <div class="">
             {{ $slot }}
         </div>
+        @livewireScripts
     </body>
 </html>
