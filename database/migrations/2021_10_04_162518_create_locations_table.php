@@ -21,7 +21,7 @@ class CreateLocationsTable extends Migration
             $table->string('line2');
             $table->decimal('lat', 10, 7);
             $table->decimal('long', 10, 7);
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->string('image_url')->nullable();
             $table->boolean('is_future');
             $table->boolean('is_open24');
