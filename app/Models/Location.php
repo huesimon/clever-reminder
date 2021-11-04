@@ -21,4 +21,13 @@ class Location extends Model
     {
         return $this->hasMany(ChargePoint::class);
     }
+
+
+    protected $casts = [
+        'is_future' => 'boolean',
+        'is_open24' => 'boolean',
+        'is_remote_charging_supported' => 'boolean',
+        'is_roaming' => 'boolean',
+        'is_admin' => 'boolean',
+    ];
 }

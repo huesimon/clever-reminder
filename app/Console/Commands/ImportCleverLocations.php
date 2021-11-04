@@ -8,6 +8,7 @@ use App\Models\Location;
 use Facade\Ignition\DumpRecorder\Dump;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ImportCleverLocations extends Command
 {
@@ -42,14 +43,22 @@ class ImportCleverLocations extends Command
      */
     public function handle()
     {
+        Log::info("Import started: " . now()->format('Y-m-d H:i:s'));
         // Http call to clever and get locations
 
         $locationResponse = Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/locations.json");
         $availabilityResponse = Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/availability.json")->json();
+        $originalLocations = Location::all()->count();
+        $originalChargePoints = ChargePoint::all()->count();
+        $originalConnectors = Connector::all()->count();
 
         foreach($locationResponse->object() as $location) {
             // dd($location->openingHours->da);
-            $newLocation = Location::create([
+            $newLocation = Location::updateOrCreate(
+                [
+                    'clever_id' => $location->id,
+                ],
+                [
                 'clever_id' => $location->id,
                 'name' => $location->name,
                 'line1' =>  $location->address->line1,
@@ -69,25 +78,53 @@ class ImportCleverLocations extends Command
                 'phone_number' => isset($location->phoneNumber) ? $location->phoneNumber : null
             ]);
 
+            // dd($newLocation->getOriginal(),
+            //     $newLocation->getChanges()
+            // );
+            if ($newLocation->wasChanged()) {
+                dd($newLocation->getOriginal(), $newLocation->getChanges());
+                dump("location $location->name was updated");
+            }
+            // dd($newLocation->wasChanged(), $newLocation->getChanges());
+
             foreach ($location->chargePoints as $key => $chargePoint) {
-                $newChargePoint = ChargePoint::make([
+                $newChargePoint = ChargePoint::firstOrNew([
                     'clever_id' => $key,
+                ], [
+                    'type' => $chargePoint->type,
+                ]);
+                $newChargePoint->update([
                     'type' => $chargePoint->type,
                 ]);
                 $newChargePoint->location()->associate($newLocation);
+
+                if ($newChargePoint->wasChanged()) {
+                    dump("chargepoint  $newChargePoint->clever_id was updated");
+                }
                 $newChargePoint->save();
 
                 foreach ($chargePoint->connectors as $connector) {
-                    $newConnector = Connector::make([
-                        'connector_no' => $connector->connectorNo,
+                    $newConnector = Connector::firstOrNew([
                         'clever_id' => $connector->id,
+                    ], [
+                        'connector_no' => $connector->connectorNo,
+                        'kW' => $connector->kW,
+                        'speed' => $connector->speed,
+                        'type' => $connector->type,
+                    ]);
+                    $newConnector->update([
+                        'connector_no' => $connector->connectorNo,
                         'kW' => $connector->kW,
                         'speed' => $connector->speed,
                         'type' => $connector->type,
                     ]);
                     $newConnector->chargePoint()->associate($newChargePoint);
+                    if ($newConnector->wasChanged()) {
+                        dump("connector  $newConnector->clever_id was updated");
+                    }
+
                     $newConnector->save();
-                    dump('saving connector');
+                    // dd($newConnector->waschanged(), $newConnector->getChanges());
                 }
 
             }
@@ -95,7 +132,24 @@ class ImportCleverLocations extends Command
         };
 
 
+        $newLocations = Location::all()->count();
+        $newChargePoints = ChargePoint::all()->count();
+        $newConnectors = Connector::all()->count();
+
+        if ($newLocations > $originalLocations) {
+            dump("new locations: $newLocations");
+        }
+        if ($newChargePoints > $originalChargePoints) {
+            dump("new chargepoints: $newChargePoints");
+        }
+        if ($newConnectors > $originalConnectors) {
+            dump("new connectors: $newConnectors");
+        }
+
+        Log::info("Import stopped: " . now()->format('Y-m-d H:i:s'));
+        dd($originalLocations, $originalChargePoints, $originalConnectors, 'new', $newLocations, $newChargePoints, $newConnectors);
         // Store locations in db
+
 
 
         return 0;
