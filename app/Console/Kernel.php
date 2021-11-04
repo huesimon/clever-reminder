@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         // $schedule->command('command:name')->everyMinute();
-        $schedule->command('import:clever.locations')->daily('9:00');
+        $schedule->command('import:clever.locations')->everyMinute();
     }
 
     /**

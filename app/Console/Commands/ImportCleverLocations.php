@@ -47,8 +47,7 @@ class ImportCleverLocations extends Command
         // Http call to clever and get locations
 
         $locationResponse = Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/locations.json");
-        $availabilityResponse = Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/availability.json")->json();
-        $originalLocations = Location::all()->count();
+         $originalLocations = Location::all()->count();
         $originalChargePoints = ChargePoint::all()->count();
         $originalConnectors = Connector::all()->count();
 
@@ -137,13 +136,13 @@ class ImportCleverLocations extends Command
         $newConnectors = Connector::all()->count();
 
         if ($newLocations > $originalLocations) {
-            dump("new locations: $newLocations");
+            Log::info("new locations: ". $newLocations - $originalLocations);
         }
         if ($newChargePoints > $originalChargePoints) {
-            dump("new chargepoints: $newChargePoints");
+            Log::info("new chargepoints: " . $newChargePoints - $originalChargePoints);
         }
         if ($newConnectors > $originalConnectors) {
-            dump("new connectors: $newConnectors");
+            Log::info("new connectors: " . $newConnectors - $originalConnectors);
         }
 
         Log::info("Import stopped: " . now()->format('Y-m-d H:i:s'));
@@ -152,6 +151,6 @@ class ImportCleverLocations extends Command
 
 
 
-        return 0;
+        return Command::SUCCESS;
     }
 }
