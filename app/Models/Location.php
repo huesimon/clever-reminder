@@ -22,6 +22,11 @@ class Location extends Model
         return $this->hasMany(ChargePoint::class);
     }
 
+    public static function findByOrFail($column, $value)
+    {
+        return Location::where($column, $value)->firstOrFail();
+    }
+
 
     protected $casts = [
         'is_future' => 'boolean',

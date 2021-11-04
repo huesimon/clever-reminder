@@ -17,27 +17,6 @@ class CreateLocationSubscribersTable extends Migration
             $table->id();
             $table->string('type');
 
-            $table->integer('available_ccs_fast');
-            $table->integer('available_ccs_ultra');
-            $table->integer('available_chademo_fast');
-            $table->integer('available_chademo_ultra');
-            $table->integer('available_iec_type_2_fast');
-            $table->integer('available_iec_type_2_regular');
-
-            $table->integer('functional_ccs_fast');
-            $table->integer('functional_ccs_ultra');
-            $table->integer('functional_chademo_fast');
-            $table->integer('functional_chademo_ultra');
-            $table->integer('functional_iec_type_2_fast');
-            $table->integer('functional_iec_type_2_regular');
-
-            $table->integer('total_ccs_fast');
-            $table->integer('total_ccs_ultra');
-            $table->integer('total_chademo_fast');
-            $table->integer('total_chademo_ultra');
-            $table->integer('total_iec_type_2_fast');
-            $table->integer('total_iec_type_2_regular');
-
             $table->foreignId('location_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
