@@ -43,12 +43,8 @@ class CheckChargerSpots extends Command
     public function handle()
     {
         $availabilityResponse = collect(Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/availability.json")->json());
-        // dd($availabilityResponse);
 
         foreach ($availabilityResponse as $locationId => $available) {
-            $type = 'ccs';
-            // dd($key);
-            // Location::findOrFail(123123213213);
             try {
                 Location::findByOrFail('clever_id', $locationId);
             } catch (\Throwable $th) {
@@ -59,45 +55,29 @@ class CheckChargerSpots extends Command
             ], [
                 $this->getDataArray($available),
             ]);
-            // dd($locationId);
+
             $newAvailable->fill($this->getDataArray($available));
             $newAvailable->location()->associate($locationId);
-            // $originals = $newAvailable->getOriginal();
 
-            // dd(
-            //     $newAvailable->wasChanged(),
-            //     $newAvailable->getDirty(),
-            // );
-            // dd($newAvailable->id, $newAvailable->getDirty());
             if ($newAvailable->id) {
                 foreach ($newAvailable->getDirty() as $key => $newestValue) {
                     if ($key == 'location_id') {
                         continue;
                     }
-                    // dd($key, $value, $originals[$key]);
-                    // dd($newAvailable->getDirty(), $newAvailable->getOriginal('available_chademo_fast'));
-
-                    // dump($value, $key);
-                    // dd($newestValue, $key, $newAvailable->getOriginal($key));
                     if ($newestValue > $newAvailable->getOriginal($key)) {
                         dump("New value $newestValue for $key is higher than original value " . $newAvailable->getOriginal($key));
-                        // dump('**************', $newAvailable->getOriginal($key), "*********************");
-                        // dd('');
                     } else {
                         dump("New value $newestValue for $key is lower than original value " . $newAvailable->getOriginal($key));
                     }
                 }
             }
 
-
+            // This block is needed because some locations are not in the locations.json
+            // Not sure if there is an easier way to fix this
             try {
-                // dd($newAvailable->location);
                 $newAvailable->save();
             } catch (\Exception $e) {
-                // throw $e;
                 Log::info($e->getMessage());
-                dd($newAvailable, "this failed");
-                // continue;
             }
         }
 
