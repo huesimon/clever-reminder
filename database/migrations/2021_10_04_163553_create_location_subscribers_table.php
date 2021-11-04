@@ -16,7 +16,6 @@ class CreateLocationSubscribersTable extends Migration
         Schema::create('location_subscribers', function (Blueprint $table) {
             $table->id();
             $table->string('type');
-
             $table->foreignId('location_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();

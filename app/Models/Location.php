@@ -22,9 +22,23 @@ class Location extends Model
         return $this->hasMany(ChargePoint::class);
     }
 
+    public function connectors()
+    {
+        return $this->hasManyThrough(Connector::class, ChargePoint::class);
+    }
+
     public static function findByOrFail($column, $value)
     {
         return Location::where($column, $value)->firstOrFail();
+    }
+
+    public function getConnectorTypes()
+    {
+        $result = collect();
+        foreach ($this->connectors as $connector) {
+            $result->push($connector->type);
+        }
+        return $result->unique();
     }
 
 
