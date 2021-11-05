@@ -47,12 +47,11 @@ class ImportCleverLocations extends Command
         // Http call to clever and get locations
 
         $locationResponse = Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/locations.json");
-         $originalLocations = Location::all()->count();
+        $originalLocations = Location::all()->count();
         $originalChargePoints = ChargePoint::all()->count();
         $originalConnectors = Connector::all()->count();
 
         foreach($locationResponse->object() as $location) {
-            // dd($location->openingHours->da);
             $newLocation = Location::updateOrCreate(
                 [
                     'clever_id' => $location->id,
@@ -77,14 +76,9 @@ class ImportCleverLocations extends Command
                 'phone_number' => isset($location->phoneNumber) ? $location->phoneNumber : null
             ]);
 
-            // dd($newLocation->getOriginal(),
-            //     $newLocation->getChanges()
-            // );
             if ($newLocation->wasChanged()) {
-                dd($newLocation->getOriginal(), $newLocation->getChanges());
-                dump("location $location->name was updated");
+                Log::info("location $location->name was updated");
             }
-            // dd($newLocation->wasChanged(), $newLocation->getChanges());
 
             foreach ($location->chargePoints as $key => $chargePoint) {
                 $newChargePoint = ChargePoint::firstOrNew([
@@ -98,7 +92,7 @@ class ImportCleverLocations extends Command
                 $newChargePoint->location()->associate($newLocation);
 
                 if ($newChargePoint->wasChanged()) {
-                    dump("chargepoint  $newChargePoint->clever_id was updated");
+                    Log::info("chargepoint  $newChargePoint->clever_id was updated");
                 }
                 $newChargePoint->save();
 
@@ -119,11 +113,10 @@ class ImportCleverLocations extends Command
                     ]);
                     $newConnector->chargePoint()->associate($newChargePoint);
                     if ($newConnector->wasChanged()) {
-                        dump("connector  $newConnector->clever_id was updated");
+                        Log::info("connector  $newConnector->clever_id was updated");
                     }
 
                     $newConnector->save();
-                    // dd($newConnector->waschanged(), $newConnector->getChanges());
                 }
 
             }
@@ -146,9 +139,6 @@ class ImportCleverLocations extends Command
         }
 
         Log::info("Import stopped: " . now()->format('Y-m-d H:i:s'));
-        dd($originalLocations, $originalChargePoints, $originalConnectors, 'new', $newLocations, $newChargePoints, $newConnectors);
-        // Store locations in db
-
 
 
         return Command::SUCCESS;
