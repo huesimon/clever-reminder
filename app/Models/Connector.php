@@ -15,11 +15,22 @@ class Connector extends Model
     const CHADEMO = 'chademo';
     const IEC_TYPE_2 = 'iec_type_2';
 
+    const TYPES = [
+        self::CCS,
+        self::CHADEMO,
+        self::IEC_TYPE_2,
+    ];
+
 
     public function chargePoint()
     {
         return $this->belongsTo(ChargePoint::class);
     }
+
+    // public function location()
+    // {
+    //     return $this->belongsTo(Location::class);
+    // }
 
     public static function getPlugType($plugType)
     {
@@ -33,7 +44,7 @@ class Connector extends Model
                 $plugType = Connector::CHADEMO;
                 break;
             case Availability::IEC_TYPE_2_FAST:
-            case Availability::IEC_TYPE_2_ULTRA:
+            case Availability::IEC_TYPE_2_REGULAR:
                 $plugType = Connector::IEC_TYPE_2;
                 break;
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LocationSubscriber;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +22,7 @@ Route::get('/', function () {
 });
 
 Route::get('/clever', function () {
+    // dd(Auth::user()->subscriptions->where('location_id', 5)->where('type', 'ccs')->first());
     return view('clever');
 });
 

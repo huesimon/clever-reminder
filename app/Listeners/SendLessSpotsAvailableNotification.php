@@ -6,6 +6,8 @@ use App\Events\LessSpotsAvailable;
 use App\Models\Availability;
 use App\Models\Connector;
 use App\Models\LocationSubscriber;
+use App\Notifications\SpotAvailableNotification;
+use App\Notifications\SpotTakenNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -33,8 +35,8 @@ class SendLessSpotsAvailableNotification
         $locationSubscribers = LocationSubscriber::where('location_id', $event->available->location->id)
             ->where('type', $plugType)->get();
 
-        foreach ($locationSubscribers as $locationSubscriber) {
-            dump($locationSubscriber->user->email);
+        foreach ($locationSubscribers as $locationSubscriber) { // send notification to all subscribers
+            $locationSubscriber->user->notify(new SpotTakenNotification($event->available, $event->plugType));
         }
 
     }
