@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Events\LessSpotsAvailable;
+use App\Events\MoreSpotsAvailable;
 use App\Models\Availability;
 use App\Models\Location;
 use Facade\Ignition\DumpRecorder\Dump;
@@ -47,7 +49,7 @@ class CheckChargerSpots extends Command
 
         foreach ($availabilityResponse as $cleverLocationId => $available) {
             try {
-                Location::findByOrFail('clever_id', $cleverLocationId);
+                $foundLocation = Location::findByOrFail('clever_id', $cleverLocationId);
             } catch (\Throwable $th) {
                 // Some locations are not found in locations.json from clever
                 continue;
@@ -61,11 +63,13 @@ class CheckChargerSpots extends Command
 
 
             if ($newAvailable->id) {
-                foreach ($newAvailable->getDirty() as $key => $newestValue) {
-                    if ($newestValue > $newAvailable->getOriginal($key)) {
-                        Log::info("New value $newestValue for $key is higher than original value " . $newAvailable->getOriginal($key));
+                foreach ($newAvailable->getDirty() as $plugType => $newestValue) {
+                    if ($newestValue > $newAvailable->getOriginal($plugType)) {
+                        event(new MoreSpotsAvailable($newAvailable, $plugType));
+                        Log::info("New value $newestValue for $plugType is higher than original value " . $newAvailable->getOriginal($plugType));
                     } else {
-                        Log::info("New value $newestValue for $key is lower than original value " . $newAvailable->getOriginal($key));
+                        event(new LessSpotsAvailable($newAvailable, $plugType));
+                        Log::info("New value $newestValue for $plugType is lower than original value " . $newAvailable->getOriginal($plugType));
                     }
                 }
             }

@@ -11,6 +11,13 @@ class Availability extends Model
 
     protected $guarded = [];
 
+    const CCS_FAST = 'available_ccs_fast';
+    const CCS_ULTRA = 'available_ccs_ultra';
+    const CHADEMO_FAST = 'available_chademo_fast';
+    const CHADEMO_ULTRA = 'available_chademo_ultra';
+    const IEC_TYPE_2_FAST = 'available_iec_type_2_fast';
+    const IEC_TYPE_2_ULTRA = 'available_iec_type_2_ultra';
+
     public function location()
     {
         return $this->belongsTo(Location::class, 'location_id', 'clever_id');

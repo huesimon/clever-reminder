@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\LocationSubscriber;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+
+    dd($locationSubscribers = LocationSubscriber::where('location_id', 5)
+            ->where('type', 'ccs')->get());
 });
 
 Route::get('/clever', function () {
