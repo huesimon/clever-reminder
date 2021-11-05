@@ -42,45 +42,42 @@ class CheckChargerSpots extends Command
      */
     public function handle()
     {
+        Log::info("Availability search started: " . now()->format('Y-m-d H:i:s'));
         $availabilityResponse = collect(Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/availability.json")->json());
 
-        foreach ($availabilityResponse as $locationId => $available) {
+        foreach ($availabilityResponse as $cleverLocationId => $available) {
             try {
-                Location::findByOrFail('clever_id', $locationId);
+                Location::findByOrFail('clever_id', $cleverLocationId);
             } catch (\Throwable $th) {
+                // Some locations are not found in locations.json from clever
                 continue;
             }
             $newAvailable = Availability::firstOrNew([
-                'location_id' => $locationId,
-            ], [
-                $this->getDataArray($available),
-            ]);
+                'location_id' => $cleverLocationId,
+            ], $this->getDataArray($available));
 
             $newAvailable->fill($this->getDataArray($available));
-            $newAvailable->location()->associate($locationId);
+            $newAvailable->location()->associate($cleverLocationId);
+
 
             if ($newAvailable->id) {
                 foreach ($newAvailable->getDirty() as $key => $newestValue) {
-                    if ($key == 'location_id') {
-                        continue;
-                    }
                     if ($newestValue > $newAvailable->getOriginal($key)) {
-                        dump("New value $newestValue for $key is higher than original value " . $newAvailable->getOriginal($key));
+                        Log::info("New value $newestValue for $key is higher than original value " . $newAvailable->getOriginal($key));
                     } else {
-                        dump("New value $newestValue for $key is lower than original value " . $newAvailable->getOriginal($key));
+                        Log::info("New value $newestValue for $key is lower than original value " . $newAvailable->getOriginal($key));
                     }
                 }
             }
-
             // This block is needed because some locations are not in the locations.json
             // Not sure if there is an easier way to fix this
             try {
                 $newAvailable->save();
             } catch (\Exception $e) {
-                Log::info($e->getMessage());
+                Log::error($e->getMessage());
             }
         }
-
+        Log::info("Availability search stopped: " . now()->format('Y-m-d H:i:s'));
         return Command::SUCCESS;
     }
 

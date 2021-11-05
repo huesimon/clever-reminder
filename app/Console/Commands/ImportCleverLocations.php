@@ -76,7 +76,7 @@ class ImportCleverLocations extends Command
                 'phone_number' => isset($location->phoneNumber) ? $location->phoneNumber : null
             ]);
 
-            if ($newLocation->wasChanged()) {
+            if ($newLocation->isDirty()) {
                 Log::info("location $location->name was updated");
             }
 
@@ -89,13 +89,13 @@ class ImportCleverLocations extends Command
                 $newChargePoint->update([
                     'type' => $chargePoint->type,
                 ]);
-                $newChargePoint->location()->associate($newLocation);
 
-                if ($newChargePoint->wasChanged()) {
+                if ($newChargePoint->isDirty()) {
                     Log::info("chargepoint  $newChargePoint->clever_id was updated");
                 }
-                $newChargePoint->save();
 
+                $newChargePoint->location()->associate($newLocation);
+                $newChargePoint->save();
                 foreach ($chargePoint->connectors as $connector) {
                     $newConnector = Connector::firstOrNew([
                         'clever_id' => $connector->id,
@@ -112,7 +112,7 @@ class ImportCleverLocations extends Command
                         'type' => $connector->type,
                     ]);
                     $newConnector->chargePoint()->associate($newChargePoint);
-                    if ($newConnector->wasChanged()) {
+                    if ($newConnector->isDirty()) {
                         Log::info("connector  $newConnector->clever_id was updated");
                     }
 
