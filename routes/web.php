@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Storage;
 */
 
 Route::get('/a.json', function () {
-    return json_decode(Storage::disk('public')->get('light.json'));
+    // return json_decode(Storage::disk('public')->get('light.json'));
     return json_decode(Storage::disk('public')->get('availability.json'));
     return Storage::disk('public')->get('availability.json');
 })->name('a.json');

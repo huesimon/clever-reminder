@@ -64,30 +64,39 @@ class CheckChargerSpots extends Command
             if ($newAvailable->id) {
                 foreach ($newAvailable->getDirty() as $plugType => $newestValue) {
                     if ($newestValue > $newAvailable->getOriginal($plugType)) {
-                        $this->debug($newAvailable, 'more');
+                        $this->debug($newAvailable, $plugType, 'more');
+                        $this->save($newAvailable);
                         event(new MoreSpotsAvailable($newAvailable, $plugType));
 
                         // Log::info("New value $newestValue for $plugType is higher than original value " . $newAvailable->getOriginal($plugType));
                     } else {
-                        $this->debug($newAvailable, 'less');
+                        $this->debug($newAvailable, $plugType, 'less');
+                        $this->save($newAvailable);
+
                         event(new LessSpotsAvailable($newAvailable, $plugType));
                         // Log::info("New value $newestValue for $plugType is lower than original value " . $newAvailable->getOriginal($plugType));
                     }
                 }
             }
-            // This block is needed because some locations are not in the locations.json
-            // Not sure if there is an easier way to fix this
-            try {
-                $newAvailable->save();
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-            }
+
+
         }
         Log::info("Availability search stopped: " . now()->format('Y-m-d H:i:s'));
         return Command::SUCCESS;
     }
 
-    private function debug($newAvailable, $moreOrLess)
+    // This block is needed because some locations are not in the locations.json
+    // Not sure if there is an easier way to fix this
+    private function save($newAvailable)
+    {
+        try {
+            $newAvailable->save();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+    }
+
+    private function debug($newAvailable, $plugType, $moreOrLess)
     {
         $debugLocations = collect(
             [
@@ -99,6 +108,8 @@ class CheckChargerSpots extends Command
             Log::debug(json_encode(
                 [
                     'value' => $moreOrLess,
+                    'plugType' => $plugType,
+                    'location_id' => $newAvailable->location_id,
                     $newAvailable->getDirty(),
                     'original' => $newAvailable->getOriginal(),
                 ]

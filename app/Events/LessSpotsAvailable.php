@@ -17,6 +17,7 @@ class LessSpotsAvailable
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $available;
+    public $plugType;
 
     /**
      * Create a new event instance.
