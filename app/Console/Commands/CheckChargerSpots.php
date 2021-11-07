@@ -46,7 +46,7 @@ class CheckChargerSpots extends Command
     {
         Log::info("Availability search started: " . now()->format('Y-m-d H:i:s'));
         $availabilityResponse = collect(Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/availability.json")->json());
-
+        // $availabilityResponse = collect(Http::get("http://127.0.0.1:8000/a.json")->json());
         foreach ($availabilityResponse as $cleverLocationId => $available) {
             try {
                 $foundLocation = Location::findByOrFail('clever_id', $cleverLocationId);
@@ -61,13 +61,15 @@ class CheckChargerSpots extends Command
             $newAvailable->fill($this->getDataArray($available));
             $newAvailable->location()->associate($cleverLocationId);
 
-
             if ($newAvailable->id) {
                 foreach ($newAvailable->getDirty() as $plugType => $newestValue) {
                     if ($newestValue > $newAvailable->getOriginal($plugType)) {
+                        $this->debug($newAvailable, 'more');
                         event(new MoreSpotsAvailable($newAvailable, $plugType));
+
                         // Log::info("New value $newestValue for $plugType is higher than original value " . $newAvailable->getOriginal($plugType));
                     } else {
+                        $this->debug($newAvailable, 'less');
                         event(new LessSpotsAvailable($newAvailable, $plugType));
                         // Log::info("New value $newestValue for $plugType is lower than original value " . $newAvailable->getOriginal($plugType));
                     }
@@ -85,6 +87,24 @@ class CheckChargerSpots extends Command
         return Command::SUCCESS;
     }
 
+    private function debug($newAvailable, $moreOrLess)
+    {
+        $debugLocations = collect(
+            [
+                ['id' => 1297],
+                ['id' => 1253],
+                ['id' => 1272]
+            ]);
+        if ($debugLocations->firstWhere('id', $newAvailable->location_id)) {
+            Log::debug(json_encode(
+                [
+                    'value' => $moreOrLess,
+                    $newAvailable->getDirty(),
+                    'original' => $newAvailable->getOriginal(),
+                ]
+            ));
+        }
+    }
     private function getDataArray($available) {
         return [
             'available_ccs_fast' => $available['available']['ccs']['fast'],

@@ -3,6 +3,7 @@
 use App\Models\LocationSubscriber;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/a.json', function () {
+    return json_decode(Storage::disk('public')->get('light.json'));
+    return json_decode(Storage::disk('public')->get('availability.json'));
+    return Storage::disk('public')->get('availability.json');
+})->name('a.json');
 
 Route::get('/', function () {
 
