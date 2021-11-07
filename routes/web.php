@@ -17,14 +17,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-    dd($locationSubscribers = LocationSubscriber::where('location_id', 5)
+    dd(LocationSubscriber::where('location_id', '1')
             ->where('type', 'ccs')->get());
-});
+})->name('home');
 
 Route::get('/clever', function () {
     // dd(Auth::user()->subscriptions->where('location_id', 5)->where('type', 'ccs')->first());
     return view('clever');
-});
+})->name('clever-dashboard');
 
 Route::get('/test', function () {
     return view('test');

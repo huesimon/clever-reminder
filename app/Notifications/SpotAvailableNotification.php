@@ -8,12 +8,15 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
+use NotificationChannels\Telegram\TelegramChannel;
+use NotificationChannels\Telegram\TelegramMessage;
 
-class SpotAvailableNotification extends Notification
+class SpotAvailableNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private $availability;
+    private $available;
     private $plugType;
 
     /**
@@ -35,7 +38,7 @@ class SpotAvailableNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return [TelegramChannel::class];
     }
 
     /**
@@ -46,13 +49,29 @@ class SpotAvailableNotification extends Notification
      */
     public function toMail($notifiable)
     {
+        Log::info(class_basename(__CLASS__) . ' to ' . $notifiable->email . ' ' . $this->available->location->name . ' ' . $this->plugType);
         return (new MailMessage)
                     ->line('There is now a new spot available at ' . $this->available->location->name . '.')
                     ->line($this->available->location->line1 . ' ' . $this->available->location->line2)
                     ->line('Total spots of type ' . Connector::getPlugType($this->plugType) . " " . $this->available->getSpotsByPlugType($this->plugType))
                     ->action('Go to subscriptions', url('/subscriptions'))
-                    ->line($this->plugType)
                     ->line('Thank you for using our application!');
+    }
+
+    public function toTelegram($notifiable)
+    {
+        Log::info(class_basename(__CLASS__) . ' to ' . $notifiable->email . ' ' . $this->available->location->name . ' ' . $this->plugType);
+        return TelegramMessage::create()
+            // Optional recipient user id.
+            ->to($notifiable->telegram_user_id)
+            // Markdown supported.
+            ->content(
+                $this->available->getSpotsByPlugType($this->plugType) // amout of spots
+                . ' spots of type ' . Connector::getPlugType($this->plugType)
+                . ' available at ' . $this->available->location->name . '.'
+                )
+            ->button('Directions', route('clever-dashboard'))
+            ->button('Unsubscribe', route('clever-dashboard'));
     }
 
     /**

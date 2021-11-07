@@ -66,10 +66,10 @@ class CheckChargerSpots extends Command
                 foreach ($newAvailable->getDirty() as $plugType => $newestValue) {
                     if ($newestValue > $newAvailable->getOriginal($plugType)) {
                         event(new MoreSpotsAvailable($newAvailable, $plugType));
-                        Log::info("New value $newestValue for $plugType is higher than original value " . $newAvailable->getOriginal($plugType));
+                        // Log::info("New value $newestValue for $plugType is higher than original value " . $newAvailable->getOriginal($plugType));
                     } else {
                         event(new LessSpotsAvailable($newAvailable, $plugType));
-                        Log::info("New value $newestValue for $plugType is lower than original value " . $newAvailable->getOriginal($plugType));
+                        // Log::info("New value $newestValue for $plugType is lower than original value " . $newAvailable->getOriginal($plugType));
                     }
                 }
             }
