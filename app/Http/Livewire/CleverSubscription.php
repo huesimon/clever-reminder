@@ -21,7 +21,13 @@ class CleverSubscription extends Component
         return view('livewire.clever-subscription', [
             // 'locations' => Location::where('name', 'like', '%' . $this->search . '%')->with(['chargepoints', 'connectors'])->get(),
             'locations' =>
-            Location::where('name', 'like', '%' . $this->search . '%')
+            Location::where(
+                    function ($query) {
+                    $query->where('line1', 'like', '%' . $this->search . '%')
+                        ->orWhere('name', 'like', '%' . $this->search . '%')
+                        ->orWhere('line2', 'like', '%' . $this->search . '%');
+                }
+            )
             ->whereHas('connectors', function($query) {
                 if($this->plugType) {
                     $query->where('connectors.type', $this->plugType);
