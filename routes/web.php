@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Location;
 use App\Models\LocationSubscriber;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -23,15 +24,13 @@ Route::get('/a.json', function () {
 })->name('a.json');
 
 Route::get('/', function () {
-
-    dd(LocationSubscriber::where('location_id', '1')
-            ->where('type', 'ccs')->get());
-})->name('home');
+    return view('clever');
+})->name('home')->name('clever-dashboard');
 
 Route::get('/clever', function () {
     // dd(Auth::user()->subscriptions->where('location_id', 5)->where('type', 'ccs')->first());
     return view('clever');
-})->name('clever-dashboard');
+});
 
 Route::get('/test', function () {
     return view('test');

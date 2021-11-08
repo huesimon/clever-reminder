@@ -17,6 +17,11 @@ class Location extends Model
         return $this->hasMany(LocationSubscriber::class);
     }
 
+    public function availability()
+    {
+        return $this->hasOne(Availability::class, 'location_id', 'clever_id');
+    }
+
     public function chargePoints()
     {
         return $this->hasMany(ChargePoint::class);

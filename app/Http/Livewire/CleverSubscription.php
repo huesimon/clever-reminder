@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\ChargePoint;
 use App\Models\Connector;
 use App\Models\Location;
 use App\Models\LocationSubscriber;
@@ -17,42 +18,20 @@ class CleverSubscription extends Component
 
     public function render()
     {
-        // dd(Location::where('name', 'like', '%' . $this->search . '%')->with(['chargepoints', 'connectors'])->get()->first());
+        $locations = Location::where(function ($query) {
+                $query->where('line1', 'like', '%' . $this->search . '%')
+                    ->orWhere('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('line2', 'like', '%' . $this->search . '%');
+                })
+                ->with(['connectors', 'availability',])
+                ->whereHas('connectors', function ($query) {
+                    if ($this->plugType) {
+                        $query->where('connectors.type', $this->plugType);
+                    }
+                })->get();
         return view('livewire.clever-subscription', [
-            // 'locations' => Location::where('name', 'like', '%' . $this->search . '%')->with(['chargepoints', 'connectors'])->get(),
             'locations' =>
-            Location::where(
-                    function ($query) {
-                    $query->where('line1', 'like', '%' . $this->search . '%')
-                        ->orWhere('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('line2', 'like', '%' . $this->search . '%');
-                }
-            )
-            ->whereHas('connectors', function($query) {
-                if($this->plugType) {
-                    $query->where('connectors.type', $this->plugType);
-                }
-            })->get(),
+            $locations
         ]);
     }
-
-    public function save(Location $location)
-    {
-        $locationSub = LocationSubscriber::updateOrCreate([
-            'location_id' => $location->id,
-            'user_id' => auth()->user()->id,
-            'type' => $this->plugType,
-        ]);
-    }
-    public function delete(Location $location)
-    {
-        $locationSub = LocationSubscriber::where([
-            'location_id' => $location->id,
-            'user_id' => auth()->user()->id,
-            'type' => $this->plugType,
-        ])->first();
-
-        $locationSub->delete();
-    }
-
 }
