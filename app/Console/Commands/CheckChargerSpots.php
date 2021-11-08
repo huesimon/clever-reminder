@@ -44,7 +44,7 @@ class CheckChargerSpots extends Command
      */
     public function handle()
     {
-        Log::info("Availability search started: " . now()->format('Y-m-d H:i:s'));
+        // Log::info("Availability search started: " . now()->format('Y-m-d H:i:s'));
         $availabilityResponse = collect(Http::get("https://clever-app-prod.firebaseio.com/chargers/v3/availability.json")->json());
         // $availabilityResponse = collect(Http::get("http://127.0.0.1:8000/a.json")->json());
         foreach ($availabilityResponse as $cleverLocationId => $available) {
@@ -81,7 +81,7 @@ class CheckChargerSpots extends Command
 
 
         }
-        Log::info("Availability search stopped: " . now()->format('Y-m-d H:i:s'));
+        // Log::info("Availability search stopped: " . now()->format('Y-m-d H:i:s'));
         return Command::SUCCESS;
     }
 
