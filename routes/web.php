@@ -3,7 +3,6 @@
 use App\Models\Location;
 use App\Models\LocationSubscriber;
 use App\Models\ChargePoint;
-use App\Models\Location;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
