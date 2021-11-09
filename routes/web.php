@@ -3,6 +3,7 @@
 use App\Models\Location;
 use App\Models\LocationSubscriber;
 use App\Models\ChargePoint;
+use App\Models\Location;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -39,6 +40,10 @@ Route::get('/test', function () {
 
 Route::get('/chargepoints/{chargePoint:clever_id}', function (Request $request, ChargePoint $chargePoint) {
     dd($chargePoint);
+});
+
+Route::get('/locations/{location}', function (Request $request, Location $location) {
+    dd($location->with(['availability', 'subscribers', 'chargePoints', 'connectors']);
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
