@@ -25,7 +25,7 @@ Route::get('/a.json', function () {
 
 Route::get('/', function () {
     return view('clever');
-})->name('home')->name('clever-dashboard');
+})->name('home');
 
 Route::get('/clever', function () {
     // dd(Auth::user()->subscriptions->where('location_id', 5)->where('type', 'ccs')->first());
