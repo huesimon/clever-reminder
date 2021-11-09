@@ -37,7 +37,7 @@ Route::get('/test', function () {
     return view('test');
 });
 
-Route::get('/chargepoints/{chargePoint}', function (Request $request, ChargePoint $chargePoint) {
+Route::get('/chargepoints/{chargePoint:clever_id}', function (Request $request, ChargePoint $chargePoint) {
     dd($chargePoint);
 });
 
