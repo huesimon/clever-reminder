@@ -75,7 +75,7 @@
     </div>
     <div class="flex flex-col p-4 space-y-4">
         <div class="w-full h-40 bg-gray-800">
-            <img src="{{$location->image_url}}" alt="Location image">
+            <!-- <img src="{{$location->image_url}}" alt="Location image"> -->
         </div>
         <div class="font-bold"> {{ $location->opening_hours_dk }} </div>
         <div>{{ $location->description }}</div>
