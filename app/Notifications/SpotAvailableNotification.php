@@ -70,8 +70,8 @@ class SpotAvailableNotification extends Notification implements ShouldQueue
                 . ' spots of type ' . Connector::getPlugType($this->plugType)
                 . ' available at ' . $this->available->location->name . '.'
                 )
-            ->button('Directions', route('clever-dashboard'))
-            ->button('Unsubscribe', route('clever-dashboard'));
+            ->button('Directions', route('home'))
+            ->button('Unsubscribe', route('home'));
     }
 
     /**
