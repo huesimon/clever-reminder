@@ -43,7 +43,7 @@ Route::get('/chargepoints/{chargePoint:clever_id}', function (Request $request, 
 });
 
 Route::get('/locations/{location}', function (Request $request, Location $location) {
-    dd($location->with(['availability', 'subscribers', 'chargePoints', 'connectors']);
+    dd($location->with(['availability', 'subscribers', 'chargePoints', 'connectors']));
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
