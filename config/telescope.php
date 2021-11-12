@@ -170,5 +170,5 @@ return [
 
     
 
-    'admin_email' => ('TELESCOPE_ADMIN_EMAIL'),
+    'admin_email' => env('TELESCOPE_ADMIN_EMAIL'),
 ];
