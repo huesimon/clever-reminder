@@ -123,8 +123,6 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
-    'telescope_admin_email' => ('TELESCOPE_ADMIN_EMAIL'),
-
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
