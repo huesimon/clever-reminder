@@ -55,7 +55,7 @@
                 {{$location?->availability?->total_ccs_fast +
                 $location?->availability?->total_ccs_ultra}}
                 available</p>
-            <p class="col-start-2 col-span-4">CHADEMO fast</p>
+            <p class="col-start-2 col-span-4">CCS fast</p>
         </div>
         @endif
         {{-- <div class="grid grid-cols-6">
