@@ -54,7 +54,7 @@ class CheckChargerSpots extends Command
                 // Some locations are not found in locations.json from clever
                 continue;
             }
-            $newAvailable = Availability::firstOrNew([
+            $newAvailable = Availability::firstOrCreate([
                 'location_id' => $cleverLocationId,
             ], $this->getDataArray($available));
 
@@ -96,22 +96,20 @@ class CheckChargerSpots extends Command
         }
     }
 
-    private function debug($newAvailable, $plugType, $moreOrLess)
+    private function debug(Availability $availability, $plugType, $moreOrLess)
     {
         $debugLocations = collect(
             [
-                ['id' => 1297],
-                ['id' => 1253],
-                ['id' => 1272]
+                ['id' => 12894]
             ]);
-        if ($debugLocations->firstWhere('id', $newAvailable->location_id)) {
+        if ($debugLocations->firstWhere('id', $availability->location_id)) {
             Log::debug(json_encode(
                 [
                     'value' => $moreOrLess,
                     'plugType' => $plugType,
-                    'location_id' => $newAvailable->location_id,
-                    $newAvailable->getDirty(),
-                    'original' => $newAvailable->getOriginal(),
+                    'location_id' => $availability->location_id,
+                    $availability->getDirty(),
+                    'original' => $availability->getOriginal(),
                 ]
             ));
         }
