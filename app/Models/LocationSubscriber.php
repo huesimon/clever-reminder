@@ -20,4 +20,9 @@ class LocationSubscriber extends Model
     {
         return $this->belongsTo(Location::class);
     }
+
+    public function refreshUuid()
+    {
+        $this->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();
+    }
 }

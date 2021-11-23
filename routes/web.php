@@ -45,6 +45,11 @@ Route::get('/locations/{location}', function (Request $request, Location $locati
     dd($location->load('availability', 'subscribers', 'chargePoints', 'connectors'));
 });
 
+Route::get('/unsubscribe/{locationSubscriber:uuid}', function (Request $request, LocationSubscriber $locationSubscriber) {
+    $locationSubscriber->delete();
+    return redirect()->route('home')->withErrors(['success' => 'You have been unsubscribed from this location.']);
+})->name('unsubscribe');
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');

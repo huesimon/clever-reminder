@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Models\Availability;
 use App\Models\Connector;
+use App\Models\LocationSubscriber;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -24,10 +25,12 @@ class SpotAvailableNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Availability $available, $plugType)
+    public function __construct(Availability $available, $plugType, LocationSubscriber $locationSubscriber)
     {
         $this->available = $available;
         $this->plugType = $plugType;
+        $this->locationSubscriber = $locationSubscriber;
+        $this->locationSubscriber->refreshUuid();
     }
 
     /**
@@ -71,7 +74,7 @@ class SpotAvailableNotification extends Notification implements ShouldQueue
                 . ' available at ' . $this->available->location->name . '.'
                 )
             ->button('Directions', route('home'))
-            ->button('Unsubscribe', route('home'));
+            ->button('Unsubscribe', route('unsubsribe', $this->locationSubscriber));
     }
 
     /**
