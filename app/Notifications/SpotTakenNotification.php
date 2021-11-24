@@ -80,7 +80,7 @@ class SpotTakenNotification extends Notification implements ShouldQueue
                     "\nSpot taken!"
             )
             ->button('Directions', route('home'))
-            ->button('Unsubscribe', route('unsubsribe', $this->locationSubscriber));
+            ->button('Unsubscribe', route('unsubscribe', $this->locationSubscriber));
     }
 
     /**

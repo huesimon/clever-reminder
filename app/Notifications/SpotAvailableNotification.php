@@ -75,7 +75,7 @@ class SpotAvailableNotification extends Notification implements ShouldQueue
                 . ' available at ' . $this->available->location->name . '.'
                 )
             ->button('Directions', route('home'))
-            ->button('Unsubscribe', route('unsubsribe', $this->locationSubscriber));
+            ->button('Unsubscribe', route('unsubscribe', $this->locationSubscriber));
     }
 
     /**
