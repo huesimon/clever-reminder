@@ -20,6 +20,8 @@ class SpotTakenNotification extends Notification implements ShouldQueue
 
     private $available;
     private $plugType;
+
+    /** LocationSubscriber $locationSubscriber */
     private $locationSubscriber;
 
     public $backoff = 30;
@@ -68,6 +70,7 @@ class SpotTakenNotification extends Notification implements ShouldQueue
 
     public function toTelegram($notifiable)
     {
+        dump($this->locationSubscriber);
         Log::info(class_basename(__CLASS__) . ' to ' . $notifiable->email . ' ' . $this->available->location->name . ' ' . $this->plugType);
         return TelegramMessage::create()
             // Optional recipient user id.
@@ -80,7 +83,9 @@ class SpotTakenNotification extends Notification implements ShouldQueue
                     "\nSpot taken!"
             )
             ->button('Directions', route('home'))
-            ->button('Unsubscribe', route('unsubscribe', $this->locationSubscriber));
+            ->button('Unsubscribe', route('unsubscribe', [
+                'locationSubscriber' => $this->locationSubscriber,
+            ]));
     }
 
     /**
