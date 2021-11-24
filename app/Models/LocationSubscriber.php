@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
 
 class LocationSubscriber extends Model
 {
@@ -23,6 +25,7 @@ class LocationSubscriber extends Model
 
     public function refreshUuid()
     {
-        $this->uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();
+        $this->uuid = Str::uuid();
+        $this->save();
     }
 }
