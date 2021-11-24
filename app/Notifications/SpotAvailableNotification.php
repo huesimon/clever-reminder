@@ -19,6 +19,7 @@ class SpotAvailableNotification extends Notification implements ShouldQueue
 
     private $available;
     private $plugType;
+    private $locationSubscriber;
 
     /**
      * Create a new notification instance.

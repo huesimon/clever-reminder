@@ -38,7 +38,7 @@ class SendMoreSpotsAvailableNotification
             ->where('type', $plugType)->get();
 
         foreach ($locationSubscribers as $locationSubscriber) { // send notification to all subscribers
-            $locationSubscriber->user->notify(new SpotAvailableNotification($event->available, $event->plugType));
+            $locationSubscriber->user->notify(new SpotAvailableNotification($event->available, $event->plugType, $locationSubscriber));
         }
 
     }

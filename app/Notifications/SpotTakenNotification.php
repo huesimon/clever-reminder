@@ -20,6 +20,7 @@ class SpotTakenNotification extends Notification implements ShouldQueue
 
     private $available;
     private $plugType;
+    private $locationSubscriber;
 
     public $backoff = 30;
     public $tries = 5;
