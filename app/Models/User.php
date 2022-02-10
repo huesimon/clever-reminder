@@ -65,4 +65,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(LocationSubscriber::class);
     }
+
+    public function locations()
+    {
+        return $this->hasManyThrough(Location::class, LocationSubscriber::class, 'user_id', 'id', 'id', 'location_id');
+    }
 }

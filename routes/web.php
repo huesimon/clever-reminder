@@ -24,18 +24,26 @@ Route::get('/a.json', function () {
     return Storage::disk('public')->get('availability.json');
 })->name('a.json');
 
-Route::get('/', function () {
-    return view('clever');
-})->name('home');
+// Route::get('/', function () {
+//     return view('clever');
+// })->name('home');
 
 Route::get('/clever', function () {
     // dd(Auth::user()->subscriptions->where('location_id', 5)->where('type', 'ccs')->first());
     return view('clever');
 });
 
-Route::get('/test', function () {
-    return view('test');
-});
+Route::get('/', function () {
+    return view('new', [
+        // 'locations' => Location::first()->get(),
+    ]);
+})->name('home');
+
+Route::get('/my-chargepoints', function () {
+    return view('new', [
+        'myChargepoints' => true,
+    ]);
+})->name('my-chargepoints');
 
 Route::get('/chargepoints/{chargePoint:clever_id}', function (Request $request, ChargePoint $chargePoint) {
     dd($chargePoint);
@@ -53,3 +61,8 @@ Route::get('/unsubscribe/{locationSubscriber:uuid}', function (Request $request,
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+
+
+Route::get('/telegram-webhook', function (Request $request) {
+    dd($request->all());
+});
