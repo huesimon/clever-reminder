@@ -19,9 +19,20 @@
         {{-- <x-icon.heart></x-icon.heart> --}}
     </div>
     <div>
-        <x-_location-item-charge-item type="Type 2" available="4" total="8" />
-        <x-_location-item-charge-item type="CHADEMO" available="4" total="8" />
-        <x-_location-item-charge-item type="CCS" available="4" total="8" />
+        <x-_location-item-charge-item type="Type 2"
+            :available="$location?->availability?->available_iec_type_2_regular +
+                $location?->availability?->available_iec_type_2_fast"
+            :total="$location?->availability?->total_iec_type_2_regular +
+                $location?->availability?->total_iec_type_2_fast" />
+        <x-_location-item-charge-item type="CHADEMO"
+        :available="$location?->availability?->available_chademo_fast +
+            $location?->availability?->available_chademo_ultra"
+        :total="$location?->availability?->total_chademo_fast +
+            $location?->availability?->total_chademo_ultra" />
+        <x-_location-item-charge-item type="CCS"
+        :available="$location?->availability?->available_ccs_fast +
+            $location?->availability?->available_ccs_ultra"
+        :total="$location?->availability?->total_ccs_fast +
+            $location?->availability?->total_ccs_ultra" />
     </div>
 </li>
-{{-- Auth::user()->subscriptions->where('location_id', $location->id)->where('type', $plugType)->first() --}}
