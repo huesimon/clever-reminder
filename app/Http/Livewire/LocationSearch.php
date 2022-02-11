@@ -12,7 +12,7 @@ class LocationSearch extends Component
     public $search;
     // public $locations;
     public $myChargepoints = false;
-    protected $paginationTheme = 'tailwind';
+    // protected $paginationTheme = 'tailwind';
     public function render()
     {
         if ($this->myChargepoints) {
@@ -23,5 +23,10 @@ class LocationSearch extends Component
         return view('livewire.location-search', [
             'locations' => $locations,
         ]);
+    }
+
+    public function paginationView()
+    {
+        return 'pagination.centered';
     }
 }
