@@ -25,6 +25,11 @@ class LocationSearch extends Component
         ]);
     }
 
+    public function updatedSearch($value)
+    {
+        $this->resetPage();
+    }
+
     public function paginationView()
     {
         return 'pagination.centered';
