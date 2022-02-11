@@ -12,6 +12,7 @@ class LocationSearch extends Component
     public $search;
     // public $locations;
     public $myChargepoints = false;
+    protected $paginationTheme = 'tailwind';
     public function render()
     {
         if ($this->myChargepoints) {
