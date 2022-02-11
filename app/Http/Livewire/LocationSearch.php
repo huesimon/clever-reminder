@@ -10,6 +10,7 @@ class LocationSearch extends Component
 {
     use WithPagination;
     public $search;
+    protected $queryString = ['search'];
     // public $locations;
     public $myChargepoints = false;
     // protected $paginationTheme = 'tailwind';
