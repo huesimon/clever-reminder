@@ -14,7 +14,7 @@
                     @endforeach
                 </ul>
 
-            <div class="mt-8 ">{{ $locations->links() }}</div>
+            <div class="mt-8 p-4">{{ $locations->links() }}</div>
             </div>
     </div>
 
