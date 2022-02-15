@@ -50,23 +50,25 @@
                     </div>
                     <x-_mobile-sidebar></x-_mobile-sidebar>
                 </div>
-                <div class="flex-shrink-0 flex border-t border-gray-200 p-4">
-                    <a href="#" class="flex-shrink-0 group block">
-                        <div class="flex items-center">
-                            <div>
-                                <img class="inline-block h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=8&amp;w=256&amp;h=256&amp;q=80" alt="">
+                @auth
+                    <div class="flex-shrink-0 flex border-t border-gray-200 p-4">
+                        <a href="#" class="flex-shrink-0 group block">
+                            <div class="flex items-center">
+                                <div>
+                                    <img class="inline-block h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=8&amp;w=256&amp;h=256&amp;q=80" alt="">
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-base font-medium text-gray-700 group-hover:text-gray-900">
+                                        {{ auth()->user()->email }}
+                                    </p>
+                                    <p class="text-sm font-medium text-gray-500 group-hover:text-gray-700">
+                                        View profile
+                                    </p>
+                                </div>
                             </div>
-                            <div class="ml-3">
-                                <p class="text-base font-medium text-gray-700 group-hover:text-gray-900">
-                                    Whitney Francis
-                                </p>
-                                <p class="text-sm font-medium text-gray-500 group-hover:text-gray-700">
-                                    View profile
-                                </p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                        </a>
+                    </div>
+                @endauth
             </div>
 
             <div class="flex-shrink-0 w-14" aria-hidden="true">
