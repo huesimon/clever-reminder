@@ -2,8 +2,11 @@
 
 namespace App\Observers;
 
+use App\Models\User;
 use App\Models\Location;
+use App\Notifications\LocationCreatedNotification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class LocationObserver
 {
@@ -16,6 +19,11 @@ class LocationObserver
     public function created(Location $location)
     {
         Log::info("Location created: ". $location->__toString());
+        Notification::send(User::whereEmail
+            (config('telescope.admin_email'))
+            ->first(),
+            new LocationCreatedNotification($location)
+        );
     }
 
     /**
