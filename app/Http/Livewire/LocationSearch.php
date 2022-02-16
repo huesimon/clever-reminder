@@ -31,8 +31,8 @@ class LocationSearch extends Component
         $this->resetPage();
     }
 
-    public function paginationView()
-    {
-        return 'pagination.centered';
-    }
+    // public function paginationView()
+    // {
+    //     return 'pagination.centered';
+    // }
 }
