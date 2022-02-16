@@ -5,7 +5,7 @@
             <div class="-mt-px w-0 flex-1 flex">
 
                 @if ($paginator->onFirstPage())
-                {{-- <a href="#"
+                {{-- <a
                     class="border-t-2 border-transparent pt-4 pr-1 inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
                     <!-- Heroicon name: solid/arrow-narrow-left -->
                     <svg class="mr-3 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -17,7 +17,7 @@
                     {!! __('pagination.previous') !!}
                 </a> --}}
                 @else
-                <a href="#"
+                <a
                     wire:click="previousPage('{{ $paginator->getPageName() }}')" wire:loading.attr="disabled" dusk="previousPage{{ $paginator->getPageName() == 'page' ? '' : '.' . $paginator->getPageName() }}.before"
                     class="border-t-2 border-transparent pt-4 pr-1 inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
                     <!-- Heroicon name: solid/arrow-narrow-left -->
@@ -44,11 +44,11 @@
                     @if (is_array($element))
                         @foreach ($element as $page => $url)
                             @if ($page == $paginator->currentPage())
-                                <a href="#"
+                                <a
                                     class="border-indigo-500 text-indigo-600 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
                                     aria-current="page"> {{ $page }} </a>
                             @else
-                                <a href="#"
+                                <a
                                     wire:click="gotoPage({{ $page }}, '{{ $paginator->getPageName() }}')"
                                     aria-label="{{ __('Go to page :page', ['page' => $page]) }}"
                                     class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium">
@@ -61,7 +61,7 @@
             </div>
             <div class="-mt-px w-0 flex-1 flex justify-end">
                 @if ($paginator->hasMorePages())
-                <a href="#"
+                <a
                     wire:click="nextPage('{{ $paginator->getPageName() }}')"
                     class="border-t-2 border-transparent pt-4 pl-1 inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
                     Next
