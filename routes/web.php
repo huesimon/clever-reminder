@@ -3,6 +3,7 @@
 use App\Models\Location;
 use App\Models\LocationSubscriber;
 use App\Models\ChargePoint;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -67,7 +68,7 @@ Route::get('/favorite/{location}', function (Request $request, Location $locatio
     return LocationSubscriber::updateOrCreate([
         'location_id' => $location->id,
         'user_id' => auth()->user()->id,
-        'type' => $request->query('plugType'),
+        'type' => request()->query('plugType'),
     ]);
 });
 
