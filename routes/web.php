@@ -67,7 +67,7 @@ Route::get('/favorite/{location}', function (Request $request, Location $locatio
     return LocationSubscriber::updateOrCreate([
         'location_id' => $location->id,
         'user_id' => auth()->user()->id,
-        'type' => $request->plugType,
+        'type' => $request->get('plugType'),
     ]);
 });
 
