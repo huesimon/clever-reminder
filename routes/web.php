@@ -63,6 +63,14 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 
+Route::get('/favorite/{location}', function (Request $request, Location $location) {
+    return LocationSubscriber::updateOrCreate([
+        'location_id' => $location->id,
+        'user_id' => auth()->user()->id,
+        'type' => $request->plugType,
+    ]);
+});
+
 Route::get('/telegram-webhook', function (Request $request) {
     dd($request->all());
 });
