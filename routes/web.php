@@ -49,7 +49,7 @@ Route::get('/chargepoints/{chargePoint:clever_id}', function (Request $request, 
     dd($chargePoint);
 });
 
-Route::get('/locations/{location}', function (Request $request, Location $location) {
+Route::get('/locations/{location:clever_id}', function (Request $request, Location $location) {
     dd($location->load('availability', 'subscribers', 'chargePoints', 'connectors'));
 });
 
