@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Storage;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('atest', function() {
+    abort(203);
+});
 
 Route::get('/a.json', function () {
     // return json_decode(Storage::disk('public')->get('light.json'));
