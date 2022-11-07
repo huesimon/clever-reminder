@@ -19,11 +19,11 @@ class LocationObserver
     public function created(Location $location)
     {
         Log::info("Location created: ". $location->__toString());
-        Notification::send(User::whereEmail
-            (config('telescope.admin_email'))
-            ->first(),
-            new LocationCreatedNotification($location)
-        );
+        // Notification::send(User::whereEmail
+        //     (config('telescope.admin_email'))
+        //     ->first(),
+        //     new LocationCreatedNotification($location)
+        // );
     }
 
     /**

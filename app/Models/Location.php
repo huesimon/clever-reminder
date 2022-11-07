@@ -17,6 +17,11 @@ class Location extends Model
         return $this->hasMany(LocationSubscriber::class);
     }
 
+    public function isSubsribed()
+    {
+        return $this->subscribers()->where('user_id', auth()->id())->exists();
+    }
+
     public function availability()
     {
         return $this->hasOne(Availability::class, 'location_id', 'clever_id');

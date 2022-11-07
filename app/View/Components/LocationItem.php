@@ -16,6 +16,14 @@ class LocationItem extends Component
     {
     }
 
+    public function save2()
+    {
+        dd('asdadsd');
+        $this->location->subscribers()->create([
+            'user_id' => auth()->id(),
+        ]);
+    }
+
     /**
      * Get the view / contents that represent the component.
      *
